@@ -30,10 +30,11 @@ list_all_versions() {
 
 download_release() {
   local -r platform="$(get_platform)"
+  local -r architecture="$(get_architecture)"
   local -r version="$1"
   local -r filename="$2"
 
-  local -r url="$GH_REPO/releases/download/v${version}/tx-${platform}-arm64.tar.gz"
+  local -r url="$GH_REPO/releases/download/v${version}/tx-${platform}-${architecture}.tar.gz"
 
   echo "* Downloading $TOOL_NAME release $version..."
   curl "${curl_opts[@]}" -o "$filename" -C - "$url" || fail "Could not download $url"
@@ -45,6 +46,20 @@ get_platform() {
     fail "tx supports MacOS and Linux only."
   else
     uname | tr '[:upper:]' '[:lower:]'
+  fi
+}
+
+get_architecture() {
+  ARCH="$(uname -m)"
+  if [ "$ARCH" == "x86_64" ]; then
+    echo "amd64"
+  elif [[ "$ARCH" == "aarch"* ]] || [[ "$ARCH" == "arm"* ]]; then
+    echo "arm64"
+  elif [[ "$ARCH" == "i386" ]]; then
+    echo "386"
+  else
+    echoerr "unsupported arch: $ARCH"
+    exit 1
   fi
 }
 
