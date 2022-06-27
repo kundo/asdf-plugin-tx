@@ -25,7 +25,7 @@ Plugin:
 ```shell
 asdf plugin add tx
 # or
-asdf plugin add tx https://github.com/kundo/asdf-tx.git
+asdf plugin add tx ssh+git://git@github.com/kundo/asdf-plugin-tx.git
 ```
 
 tx:
